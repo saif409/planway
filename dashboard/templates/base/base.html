@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="Smarthr - Bootstrap Admin Template">
+    <meta name="keywords"
+          content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
+    <meta name="author" content="Dreamguys - Bootstrap Admin Template">
+    <meta name="robots" content="noindex, nofollow">
+    <title>{% block title %}{% endblock %}</title>
+    {% load static %}
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.23/b-1.6.5/b-flash-1.6.5/b-html5-1.6.5/b-print-1.6.5/sl-1.3.1/datatables.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/line-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/morris/morris.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    {% block stylesheet %}
+    {% endblock %}
+</head>
+
+<body>
+
+<div class="main-wrapper">
+    <div class="header">
+        <div class="header-left">
+            <a href="index.html" class="logo">
+                <img src="{% static 'img/logo.png' %}" width="40" height="40" alt="">
+            </a>
+        </div>
+        <a id="toggle_btn" href="javascript:void(0);">
+					<span class="bar-icon">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+        </a>
+        <div class="page-title-box">
+            <h3>PlanWay IT</h3>
+        </div>
+        <a id="mobile_btn" class="mobile_btn" href="index.html#sidebar"><i class="fa fa-bars"></i></a>
+        <ul class="nav user-menu">
+
+            <!-- Search -->
+            <li class="nav-item">
+                <div class="top-nav-search">
+                    <a href="javascript:void(0);" class="responsive-search">
+                        <i class="fa fa-search"></i>
+                    </a>
+                    <form action="../base/test/search.html">
+                        <input class="form-control" type="text" placeholder="Search here">
+                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+            </li>
+            <!-- /Search -->
+
+            <!-- Flag -->
+            <li class="nav-item dropdown has-arrow flag-nav">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="index.html#" role="button">
+                    <img src="{% static '' %}img/flags/us.png" alt="" height="20"> <span>English</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a href="javascript:void(0);" class="dropdown-item">
+                        <img src="{% static '' %}img/flags/us.png" alt="" height="16"> English
+                    </a>
+                    <a href="javascript:void(0);" class="dropdown-item">
+                        <img src="{% static '' %}img/flags/fr.png" alt="" height="16"> French
+                    </a>
+                    <a href="javascript:void(0);" class="dropdown-item">
+                        <img src="{% static '' %}img/flags/es.png" alt="" height="16"> Spanish
+                    </a>
+                    <a href="javascript:void(0);" class="dropdown-item">
+                        <img src="{% static '' %}img/flags/de.png" alt="" height="16"> German
+                    </a>
+                </div>
+            </li>
+            <!-- /Flag -->
+
+            <!-- Notifications -->
+            <li class="nav-item dropdown">
+                <a href="index.html#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                    <i class="fa fa-bell"></i> <span class="badge badge-pill">3</span>
+                </a>
+                <div class="dropdown-menu notifications">
+                    <div class="topnav-dropdown-header">
+                        <span class="notification-title">Notifications</span>
+                        <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
+                    </div>
+                    <div class="noti-content">
+                        <ul class="notification-list">
+                            <li class="notification-message">
+                                <a href="../base/test/activities.html">
+                                    <div class="media">
+												<span class="avatar">
+													<img alt="" src="{% static '' %}img/profiles/avatar-02.jpg">
+												</span>
+                                        <div class="media-body">
+                                            <p class="noti-details"><span class="noti-title">John Doe</span> added new
+                                                task <span class="noti-title">Patient appointment booking</span></p>
+                                            <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="notification-message">
+                                <a href="../base/test/activities.html">
+                                    <div class="media">
+												<span class="avatar">
+													<img alt="" src="{% static '' %}img/profiles/avatar-03.jpg">
+												</span>
+                                        <div class="media-body">
+                                            <p class="noti-details"><span class="noti-title">Tarah Shropshire</span>
+                                                changed the task name <span class="noti-title">Appointment booking with payment gateway</span>
+                                            </p>
+                                            <p class="noti-time"><span class="notification-time">6 mins ago</span></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="notification-message">
+                                <a href="../base/test/activities.html">
+                                    <div class="media">
+												<span class="avatar">
+													<img alt="" src="a{% static '' %}img/profiles/avatar-06.jpg">
+												</span>
+                                        <div class="media-body">
+                                            <p class="noti-details"><span class="noti-title">Misty Tison</span> added
+                                                <span class="noti-title">Domenic Houston</span> and <span
+                                                        class="noti-title">Claire Mapes</span> to project <span
+                                                        class="noti-title">Doctor available module</span></p>
+                                            <p class="noti-time"><span class="notification-time">8 mins ago</span></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="notification-message">
+                                <a href="../base/test/activities.html">
+                                    <div class="media">
+												<span class="avatar">
+													<img alt="" src="{% static '' %}img/profiles/avatar-17.jpg">
+												</span>
+                                        <div class="media-body">
+                                            <p class="noti-details"><span class="noti-title">Rolland Webber</span>
+                                                completed task <span class="noti-title">Patient and Doctor video conferencing</span>
+                                            </p>
+                                            <p class="noti-time"><span class="notification-time">12 mins ago</span></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="notification-message">
+                                <a href="../base/test/activities.html">
+                                    <div class="media">
+												<span class="avatar">
+													<img alt="" src="{% static '' %}img/profiles/avatar-13.jpg">
+												</span>
+                                        <div class="media-body">
+                                            <p class="noti-details"><span class="noti-title">Bernardo Galaviz</span>
+                                                added new task <span class="noti-title">Private chat module</span></p>
+                                            <p class="noti-time"><span class="notification-time">2 days ago</span></p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="topnav-dropdown-footer">
+                        <a href="../base/test/activities.html">View all Notifications</a>
+                    </div>
+                </div>
+            </li>
+            <!-- /Notifications -->
+
+            <!-- Message Notifications -->
+            <li class="nav-item dropdown">
+                <a href="index.html#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                    <i class="fa fa-comment"></i> <span class="badge badge-pill">8</span>
+                </a>
+                <div class="dropdown-menu notifications">
+                    <div class="topnav-dropdown-header">
+                        <span class="notification-title">Messages</span>
+                        <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
+                    </div>
+                    <div class="noti-content">
+                        <ul class="notification-list">
+                            <li class="notification-message">
+                                <a href="../base/test/chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+													<span class="avatar">
+														<img alt="" src="{% static '' %}img/profiles/avatar-09.jpg">
+													</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">Richard Miles </span>
+                                            <span class="message-time">12:28 AM</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="notification-message">
+                                <a href="../base/test/chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+													<span class="avatar">
+														<img alt="" src="{% static '' %}img/profiles/avatar-02.jpg">
+													</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">John Doe</span>
+                                            <span class="message-time">6 Mar</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="notification-message">
+                                <a href="../base/test/chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+													<span class="avatar">
+														<img alt="" src="{% static '' %}img/profiles/avatar-03.jpg">
+													</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author"> Tarah Shropshire </span>
+                                            <span class="message-time">5 Mar</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="notification-message">
+                                <a href="../base/test/chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+													<span class="avatar">
+														<img alt="" src="{% static '' %}img/profiles/avatar-05.jpg">
+													</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author">Mike Litorus</span>
+                                            <span class="message-time">3 Mar</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="notification-message">
+                                <a href="../base/test/chat.html">
+                                    <div class="list-item">
+                                        <div class="list-left">
+													<span class="avatar">
+														<img alt="" src="{% static '' %}img/profiles/avatar-08.jpg">
+													</span>
+                                        </div>
+                                        <div class="list-body">
+                                            <span class="message-author"> Catherine Manseau </span>
+                                            <span class="message-time">27 Feb</span>
+                                            <div class="clearfix"></div>
+                                            <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="topnav-dropdown-footer">
+                        <a href="../base/test/chat.html">View all Messages</a>
+                    </div>
+                </div>
+            </li>
+            <!-- /Message Notifications -->
+
+            <li class="nav-item dropdown has-arrow main-drop">
+                <a href="index.html#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+							<span class="user-img"><img src="{% static '' %}img/profiles/avatar-21.jpg" alt="">
+							<span class="status online"></span></span>
+                    <span>Admin</span>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="../../../employee/templates/employee/profile.html">My Profile</a>
+                    <a class="dropdown-item" href="../base/test/settings.html">Settings</a>
+                    <a class="dropdown-item" href="../base/test/login.html">Logout</a>
+                </div>
+            </li>
+        </ul>
+        <div class="dropdown mobile-user-menu">
+            <a href="index.html#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i
+                    class="fa fa-ellipsis-v"></i></a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="../../../employee/templates/employee/profile.html">My Profile</a>
+                <a class="dropdown-item" href="../base/test/settings.html">Settings</a>
+                <a class="dropdown-item" href="../base/test/login.html">Logout</a>
+            </div>
+        </div>
+        {% block header %}
+        {% endblock %}
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu">
+                <ul>
+                    <li class="menu-title">
+                        <span>Main</span>
+                    </li>
+                    <li class="submenu">
+                        <a href="{% url 'dashboard' %}"><i class="fa fa-home"></i> <span> Dashboard</span> <span>
+                                <i class="fa fa-arrow-down"></i> </span></a>
+                        <ul style="display: none;">
+                            <li><a class="active" href="">Admin Dashboard</a></li>
+                            <li><a href="">Employee Dashboard</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#"><i class="fa fa-cube"></i> <span> Apps</span><span class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="../base/test/chat.html">Chat</a></li>
+                            <li class="submenu">
+                                <a href="index.html#"><span> Calls</span> <span class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="../base/test/voice-call.html">Voice Call</a></li>
+                                    <li><a href="../base/test/video-call.html">Video Call</a></li>
+                                    <li><a href="../base/test/outgoing-call.html">Outgoing Call</a></li>
+                                    <li><a href="../base/test/incoming-call.html">Incoming Call</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="../base/test/events.html">Calendar</a></li>
+                            <li><a href="../base/test/contacts.html">Contacts</a></li>
+                            <li><a href="../base/test/inbox.html">Email</a></li>
+                            <li><a href="../base/test/file-manager.html">File Manager</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-title">
+                        <span>Employees</span>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#" class="noti-dot"><i class="fa fa-user"></i> <span> Employees</span></a>
+                        <ul style="display: none;">
+                            <li><a href="{% url 'employee' filter='None' %}">All Employees</a></li>
+                            <li><a href="{% url 'holiday_list' %}">Holidays</a></li>
+                            <li><a href="{% url 'leave_list' filter='Pending' %}">Leaves</a></li>
+                            <li><a href="">Leave Settings</a></li>
+                            <li><a href="">Attendance (Admin)</a></li>
+                            <li><a href="">Attendance (Employee)</a></li>
+                            <li><a href="{% url 'department_list' %}">Departments</a></li>
+                            <li><a href="{% url 'designation_list' %}">Designations</a></li>
+                            <li><a href="">Timesheet</a></li>
+                            <li><a href="">Overtime</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{% url 'clients' %}"><i class="fa fa-users"></i> <span>Clients</span></a>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#"><i class="fa fa-rocket"></i> <span> Projects</span> <span
+                                class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="
+
+
+                                {% url 'project_list' %}">Projects</a></li>
+{#                            <li><a href="">Tasks</a></li>#}
+{#                            <li><a href="">Task Board</a></li>#}
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{% url 'Lead_list' %}"><i class="fa fa-user-secret"></i> <span>Leads</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url 'ticket_list' filter='None' %}"><i class="fa fa-address-card"></i> <span>Tickets</span></a>
+                    </li>
+                    <li class="menu-title">
+                        <span>HR</span>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#"><i class="fas fa-file-invoice-dollar"></i> <span> Accounts </span> <span class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="{% url 'estimate_list' %}">Estimates</a></li>
+                            <li><a href="{% url 'invoice_list' %}">Invoices</a></li>
+                            <li><a href="{% url 'payment_list' %}">Payments</a></li>
+                            <li><a href="{% url 'expense_list' %}">Expenses</a></li>
+                            <li><a href="{% url 'provident_fund' %}">Provident Fund</a></li>
+                            <li><a href="{% url 'taxes' %}">Taxes</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#"><i class="far fa-money-bill-alt"></i><span> Payroll </span> <span
+                                class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="{% url 'employee_salary' %}"> Employee Salary </a></li>
+                            <li><a href="{% url 'salary' %}"> Payslip </a></li>
+                            <li><a href="{% url 'payroll_item' %}"> Payroll Items </a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{% url 'policies' %}"><i class="fa fa-file-pdf"></i> <span>Policies</span></a>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#"><i class="fas fa-chart-pie"></i> <span> Reports </span>
+                            <span class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="{% url 'expense_reports' %}"> Expense Report </a></li>
+                            <li><a href="{% url 'invoice_Report' %}"> Invoice Report </a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-title">
+                        <span>Performance</span>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#"><i class="fa fa-graduation-cap"></i> <span> Performance </span> <span
+                                class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                        <ul style="display: none;">
+                            <li><a href=""> Performance Indicator </a></li>
+                            <li><a href=""> Performance Review </a></li>
+                            <li><a href=""> Performance Appraisal </a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#"><i class="fa fa-crosshairs"></i> <span> Goals </span> <span
+                                class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="{% url 'performance:goal-list' %}"> Goal List </a></li>
+                            <li><a href="{% url 'performance:goal_type' %}"> Goal Type </a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#"><i class="fa fa-edit"></i> <span> Training </span> <span
+                                class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="{% url 'performance:training_list' %}"> Training List </a></li>
+                            <li><a href="{% url 'performance:trainers_list' %}"> Trainers</a></li>
+                            <li><a href="{% url 'performance:training_types' %}"> Training Type </a></li>
+                        </ul>
+                    </li>
+                    <li><a href=""><i class="fa fa-bullhorn"></i> <span>Promotion</span></a>
+                    </li>
+                    <li><a href=""><i class="fas fa-external-link-square-alt"></i><span>Resignation</span></a>
+                    </li>
+                    <li><a href=""><i class="fa fa-times-circle"></i>
+                        <span>Termination</span></a></li>
+                    <li class="menu-title">
+                        <span>Administration</span>
+                    </li>
+                    <li>
+                        <a href="{% url 'assets' %}"><i class="fa fa-object-ungroup"></i> <span>Assets</span></a>
+                    </li>
+                    <li class="submenu">
+                        <a href="index.html#"><i class="fa fa-briefcase"></i> <span> Jobs </span> <span
+                                class="fas fa-angle-down" style="margin-left:130px;"></span></a>
+                        <ul style="display: none;">
+                            <li><a href=""> Manage Jobs </a></li>
+                            <li><a href=""> Applied Candidates </a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href=""><i class="fa fa-cog"></i> <span>Settings</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {%  block sideber %}
+        {% endblock %}
+    </div>
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'plugins/morris/morris.min.js' %}"></script>
+<script src="{% static 'js/chart.js' %}"></script>
+
+<script src="{% static 'js/customjs/handle_all_select.js' %}"></script>
+<script src="{% static 'js/customjs/track_id.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.j' %}s"></script>
+<script src="{% static 'plugins/raphael/raphael.min.js' %}"></script>
+<script src="{% static 'js/html5shiv.min.js' %}"></script>
+<script src="{% static 'js/respond.min.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+<script src="{% static 'js/customjs/form_validation.js' %}"></script>
+ <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/js/all.min.js" integrity="sha512-UwcC/iaz5ziHX7V6LjSKaXgCuRRqbTp1QHpbOJ4l1nw2/boCfZ2KlFIqBUA/uRVF0onbREnY9do8rM/uT/ilqw==" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.23/b-1.6.5/b-flash-1.6.5/b-html5-1.6.5/b-print-1.6.5/sl-1.3.1/datatables.min.js"></script>
+{% block script %}
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+{%  extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    Oxdora | Designation
+{% endblock %}
+{% block stylesheet %}
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block sideber %}
+{% endblock %}
+{% block content %}
+
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Designations</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Designations</li>
+                </ul>
+            </div>
+            <div class="col-auto float-right ml-auto">
+                <a href="designations.html#" class="btn add-btn" data-toggle="modal" data-target="#add_designation"><i class="fa fa-plus"></i> Add Designation</a>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+ <div class="message">
+            {% if messages %}
+                <div class="messages" style="margin:20px;">
+                    {% for message in messages %}
+                        <div class="alert alert-primary" {% if message.tags %}
+                             class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped custom-table mb-0 datatable">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;">#</th>
+                            <th>Designation </th>
+                            <th>Department </th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for d in designation %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ d.designation_type }}</td>
+                            <td>{{ d.department_name.department_name }}</td>
+                            <td class="text-right">
+                            <div class="dropdown dropdown-action">
+                                    <a href="designations.html#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="designations.html#" data-toggle="modal" data-target="#edit_designation{{ d.id }}"><i class="fa fa-edit text-primary m-r-5"></i> Edit</a>
+                                    <a class="dropdown-item" href="designations.html#" data-toggle="modal" data-target="#delete_designation{{ d.id }}"><i class="fa fa-trash text-danger m-r-5"></i> Delete</a>
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <div id="edit_designation{{ d.id }}" class="modal custom-modal fade" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit Designation</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group">
+                                                <label>Designation Name <span class="text-danger">*</span></label>
+                                                <input class="form-control" value="{{ d.designation_type }}" type="text" name="designation">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Department <span class="text-danger">*</span></label>
+                                                <select class="form-control" name="department">
+                                                    <option>{{ d.department_name.department_name }}</option>
+                                                    {% for department in department %}
+                                                        <option value="{{ department.department_name.department_name }}">{{ department.department_name.department_name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="submit-section">
+                                                <button class="btn btn-primary submit-btn">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal custom-modal fade" id="delete_designation{{ d.id }}" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="form-header">
+                                            <h3>Delete Designation</h3>
+                                            <p>Are you sure want to delete?</p>
+                                        </div>
+                                        <div class="modal-btn delete-action">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <a href="{% url 'remove_designation' id=d.id %}" class="btn btn-primary continue-btn">Delete</a>
+                                                </div>
+                                                <div class="col-6">
+                                                    <a href="javascript:void(0);" data-dismiss="modal"
+                                                       class="btn btn-primary cancel-btn">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="add_designation" class="modal custom-modal fade" role="dialog">
+    <form action="{% url 'add_designation' %}" method="post">
+    {% csrf_token %}
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Designation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Designation Name <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" name="designation">
+                    </div>
+                    <div class="form-group">
+                        <label>Department <span class="text-danger">*</span></label>
+                        <select class="form-control" name="department">
+                            {% for department in department %}
+                            <option value="{{ department.id }}">{{ department.department_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+
+
+{% endblock %}
+{% block script %}
+{% endblock %}

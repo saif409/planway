@@ -1,0 +1,401 @@
+{%  extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    Planway IT | Projects List
+{% endblock %}
+{% block stylesheet %}
+
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block sideber %}
+{% endblock %}
+{% block content %}
+
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Projects</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Projects</li>
+                    </ul>
+                </div>
+                <div class="col-auto float-right ml-auto">
+                    <a href="projects.html#" class="btn add-btn" data-toggle="modal" data-target="#create_project"><i class="fa fa-plus"></i> Create Project</a>
+                    <div class="view-icons">
+                        <a href="projects.html" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
+                        <a href="project-list.html" class="list-view btn btn-link"><i class="fa fa-bars"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <!-- Search Filter -->
+        <div class="row filter-row">
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus">
+                    <input type="text" class="form-control floating">
+                    <label class="focus-label">Project Name</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus">
+                    <input type="text" class="form-control floating">
+                    <label class="focus-label">Employee Name</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus select-focus">
+                    <select class="form-control floating">
+                        <option>Select Roll</option>
+                        <option>Web Developer</option>
+                        <option>Web Designer</option>
+                        <option>Android Developer</option>
+                        <option>Ios Developer</option>
+                    </select>
+                    <label class="focus-label">Designation</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <a href="projects.html#" class="btn btn-success btn-block"> Search </a>
+            </div>
+        </div>
+        <!-- Search Filter -->
+
+        <div class="row">
+            {% for obj in obj  %}
+                <div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="dropdown dropdown-action profile-action">
+                            <a href="projects.html#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#edit_project{{ obj.id }}"><i class="fa fa-edit text-primary m-r-5"></i> Edit</a>
+                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#delete_project{{ obj.id }}"><i class="fa fa-trash text-danger m-r-5"></i> Delete</a>
+                            </div>
+                        </div>
+                        <h4 class="project-title"><a href="project-view.html">{{ obj.company_name.company_name }}</a></h4>
+                        <small class="block text-ellipsis m-b-15">
+                            <span class="text-xs">1</span> <span class="text-muted">open tasks, </span>
+                            <span class="text-xs">9</span> <span class="text-muted">tasks completed</span>
+                        </small>
+                        <h4>{{ obj.project_title }}</h4>
+                        <p class="text-muted">{{ obj.project_description | truncatechars:100 }}</p>
+                        <div class="pro-deadline m-b-15">
+                            <div class="sub-title">Deadline:</div>
+                            <div class="text-muted">{{ obj.project_deadline }}</div>
+                        </div>
+
+                        <div class="project-members m-b-15">
+                            <div>Project Leader :</div>
+                            <ul class="team-members">
+                                <li>
+
+                                    <a href="{% url 'profile' id=obj.id  %}" data-toggle="tooltip" title="{{ obj.project_leader.leader_name.user }}"><img alt="" src="{{ obj.project_leader.leader_name.user.profile_url }}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="project-members m-b-15">
+                            <div>Team :</div>
+                            <ul class="team-members">
+                                {% for b in obj.project_employee.all %}
+                                    <li>
+                                    <a href="{% url 'profile' id=b.id %}" data-toggle="tooltip" title="{{ b.user }}"><img alt="" src="{{ b.profile_picture.url }}"></a>
+                                </li>
+                                {% endfor %}
+{#                                    <li class="dropdown avatar-dropdown">#}
+{#                                        <a href="projects.html#" class="all-users dropdown-toggle" data-toggle="dropdown" aria-expanded="false">+15</a>#}
+{#                                        <div class="dropdown-menu dropdown-menu-right">#}
+{#                                            <div class="avatar-group">#}
+{#                                                {% for b in obj.project_employee.all %}#}
+{#                                                    <a class="avatar avatar-xs" href="projects.html#">#}
+{#                                                        <img alt="" src="{{ b.profile_url }}">#}
+{#                                                    </a>#}
+{#                                               {% endfor %}#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </li>#}
+                            </ul>
+                        </div>
+                        <p class="m-b-5">Progress <span class="text-success float-right">{{ obj.progress }}%</span></p>
+                        <div class="progress progress-xs mb-0">
+                            <div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="{{ obj.progress }}%" style="width: {{ obj.progress }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div class="modal custom-modal fade" id="delete_project{{ obj.id }}" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="form-header">
+                                <h3>Delete Project</h3>
+                                <p>Are you sure want to delete?</p>
+                            </div>
+                            <div class="modal-btn delete-action">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <a href="{% url 'remove_project' id=obj.id  %}" class="btn btn-primary continue-btn">Delete</a>
+                                    </div>
+                                    <div class="col-6">
+                                        <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div id="edit_project{{ obj.id }}" class="modal custom-modal fade"  role="dialog">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Project</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="{% url 'update_project' id=obj.id %}">
+                                    {% csrf_token %}
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Project Name</label>
+                                                <input class="form-control" type="text" name="project_title" value="{{ obj.project_title }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Client</label>
+                                                <select class="form-control" name="company_name">
+                                                    {% for client in client %}
+                                                        <option>{{ client.company_name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Start Date</label>
+                                                <div class="cal-icon">
+                                                    <input class="form-control datetimepicker" type="text" name="start_date" value="{{ obj.start_date }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>End Date</label>
+                                                <div class="cal-icon">
+                                                    <input class="form-control datetimepicker" type="text" name="project_deadline" value="{{ obj.project_deadline }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Priority</label>
+                                                <select class="form-control" name="priority">
+                                                    <option value="High">{{ obj.priority }}</option>
+                                                    <option value="High">High</option>
+                                                    <option value="Medium">Medium</option>
+                                                    <option value="Low">Low</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Add Project Leader</label>
+                                                <select name="project_leader" id="" class="form-control" id="project_leader">
+                                                    {% for p in leader %}
+                                                        <option value="{{ p.id }}">{{ p.leader_name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-auto">
+                                       <div class="input-group mb-2 ">
+                                                <select name="project_employee[]" id="project_employee" class="form-control card_count" multiple>
+                                                    {% for e in employee %}
+                                                        <option value="{{ e.id }}" {% if e in obj.project_employee.all  %}selected{% endif %}>{{ e.user }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea rows="4" name="project_description" class="form-control summernote" placeholder="Enter your message here">{{ obj.project_description }}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Upload Files</label>
+                                        <input class="form-control" type="file" name="project_files" value="">
+                                    </div>
+                                    <div class="submit-section">
+                                        <button class="btn btn-primary submit-btn">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+
+    <div id="create_project" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Project</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'create_project' %}">
+                    {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Project Name</label>
+                                    <input class="form-control" type="text" name="project_title">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Client</label>
+                                    <select class="form-control" name="company_name">
+                                        {% for client in client %}
+                                        <option>{{ client.company_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Start Date</label>
+                                    <div class="cal-icon">
+                                        <input class="form-control datetimepicker" type="text" name="start_date">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>End Date</label>
+                                    <div class="cal-icon">
+                                        <input class="form-control datetimepicker" type="text" name="project_deadline">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Priority</label>
+                                    <select class="form-control" name="priority">
+                                        <option value="High">High</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Low">Low</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Add Project Leader</label>
+                                    <select name="project_leader" id="" class="form-control">
+                                        {% for p in leader %}
+                                        <option value="{{ p.id }}">{{ p.leader_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-auto">
+                            <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                        <div  id="add_team">
+                            <div class="input-group mb-2 ">
+                                <select name="project_employee[]"  id="" class="form-control card_count">
+                                    {% for e in employee %}
+                                        <option value="{{ e.id }}">{{ e.user }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <button class="btn-danger dlt_btn" type="button" id=""><i class="fa fa-trash"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary float-right mb-3" id="add_team_button">Add More</button>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea rows="4" name="project_description" class="form-control summernote" placeholder="Enter your message here"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Files</label>
+                            <input class="form-control" type="file" name="project_files">
+                        </div>
+                        <div class="submit-section">
+                            <button class="btn btn-primary submit-btn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function (){
+            let html = $("#add_team").html()
+            $("#add_team_button").click(
+                function (){
+                    $("#add_team").append(html)
+                }
+            )
+        })
+    </script>
+    <script>
+        $(document).on('click', '.dlt_btn', function(){
+        let html_length = $(".card_count").length
+        if (html_length == 1){
+            alert("Last Table Can't Be Removed. ")
+        }
+        else{
+             $(this).parent().parent().parent().remove()
+        }
+    })
+    </script>
+
+
+{% endblock %}
+

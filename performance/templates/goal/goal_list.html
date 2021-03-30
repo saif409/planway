@@ -1,0 +1,315 @@
+{%  extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    Oxdora I Tech | Goal List
+{% endblock %}
+{% block stylesheet %}
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block sideber %}
+{% endblock %}
+{% block content %}
+
+    <!-- Page Content -->
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Goal Tracking</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Goal Tracking</li>
+                    </ul>
+                </div>
+                <div class="col-auto float-right ml-auto">
+                    <a class="btn add-btn" data-toggle="modal" data-target="#add_goal"><i class="fa fa-plus"></i> Add New</a>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table mb-0 datatable">
+                        <thead>
+                        <tr>
+                            <th style="width: 30px;">#</th>
+                            <th>Goal Type</th>
+                            <th>Subject</th>
+                            <th>Target Achievement</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Description </th>
+                            <th>Status </th>
+                            <th>Progress </th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for goal in goals %}
+
+                            <tr>
+
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ goal.goal_type }}</td>
+                            <td>{{ goal.subject }}</td>
+                            <td>{{ goal.target }}</td>
+                            <td>
+                                {{ goal.start_date }}
+                            </td>
+                            <td>{{ goal.end_date }}</td>
+                            <td>{{ goal.description }}</td>
+                            <td>
+                                <div class="dropdown action-label">
+                                    <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        {% ifequal goal.status 1 %}
+                                            <i class="fa fa-dot-circle-o text-success"></i> {{ goal.get_status_display }}
+                                        {% else %}
+                                            <i class="fa fa-dot-circle-o text-danger"></i> {{ goal.get_status_display }}
+                                        {% endifequal %}
+
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item"><i class="fa fa-dot-circle-o text-success"></i> Active</a>
+                                        <a class="dropdown-item"><i class="fa fa-dot-circle-o text-danger"></i> Inactive</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><p class="mb-1">Completed {{ goal.progress }}%</p><div class="progress" style="height:5px"><div class="progress-bar bg-primary progress-sm" style="width: {{ goal.progress }}%;height:10px;"></div></div></td>
+
+                            <td class="text-right">
+                                <div class="dropdown dropdown-action">
+                                    <a href="goal-tracking.html#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v">more_vert</i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="goal-tracking.html#" data-toggle="modal" data-target="#edit_goal{{ goal.id }}"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                                        <a class="dropdown-item" href="goal-tracking.html#" data-toggle="modal" data-target="#delete_goal{{ goal.id }}"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                    </div>
+
+
+                                    <!-- Edit Goal Modal -->
+                                    <div id="edit_goal{{ goal.id }}" class="modal custom-modal fade" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Edit Goal Tracking</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{% url 'performance:update_goal' goal.id %}" method="post"> {% csrf_token %}
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label">Goal Type</label>
+                                                                    <select name="goal_type_id" class="form-control">
+                                                                        {% for goal_type in goal_types %}
+                                                                            <option value="{{ goal_type.id }}"
+                                                                            {% ifequal goal_type goal.goal_type %} selected {% endifequal %}
+                                                                                >{{ goal_type.goal_type }}</option>
+                                                                        {% endfor %}
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label">Subject</label>
+                                                                    <input name="subject"  class="form-control" type="text" value="{{ goal.subject }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label">Target Achievement</label>
+                                                                    <input name="target" class="form-control" type="text" value="{{ goal.target }}">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Start Date <span class="text-danger">*</span></label>
+                                                                    <div class=""><input name="start_date" class="form-control" value="{{ goal.start_date }}" type="date"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>End Date <span class="text-danger">*</span></label>
+                                                                    <div class=""><input name="end_date" class="form-control" value="{{ goal.end_date }}" type="date"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 mb-3">
+                                                                <div class="form-group">
+                                                                    <label for="customRange">Progress</label>
+                                                                    <input name="progress" type="range" class="form-control-range custom-range" id="customRange">
+                                                                    <div class="mt-2" id="result">Progress Value: <b></b></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label>Description <span class="text-danger">*</span></label>
+                                                                    <textarea name="description" class="form-control" rows="4">{{ goal.description }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label class="col-form-label">Status</label>
+                                                                    <select class="form-control" name="status">
+                                                                        {% for status in status_choices %}
+                                                                            <option value="{{ status.0 }}"
+                                                                            {% ifequal status.0 goal.status %} selected {% endifequal %}
+                                                                            >{{ status.1 }}</option>
+
+                                                                        {% endfor %}
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="submit-section">
+                                                            <button class="btn btn-primary submit-btn">Save</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /Edit Goal Modal -->
+
+                                    <!-- Delete Goal Modal -->
+                                    <div class="modal custom-modal fade" id="delete_goal{{ goal.id }}" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <div class="form-header">
+                                                        <h3>Delete Goal Tracking List</h3>
+                                                        <p>Are you sure want to delete?</p>
+                                                    </div>
+                                                    <div class="modal-btn delete-action">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <a href="{% url 'performance:remove_goal' goal.id %}" class="btn btn-primary continue-btn">Delete</a>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /Delete Goal Modal -->
+
+                                </div>
+                            </td>
+
+                            {% endfor %}
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Content -->
+
+
+    <!-- Add Goal Modal -->
+    <div id="add_goal" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Goal Tracking</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'performance:add_goal' %}" method="post"> {% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-form-label">Goal Type</label>
+                                    <select name="goal_type_id" class="form-control">
+                                       {% for goal_type in goal_types %}
+                                           <option value="{{ goal_type.id }}">{{ goal_type.goal_type }}</option>
+                                       {% endfor %}
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Subject</label>
+                                    <input name="subject" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label">Target Achievement</label>
+                                    <input name="target" class="form-control" type="text">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Start Date <span class="text-danger">*</span></label>
+                                    <div class="cal-icon"><input name="start_date" class="form-control" type="date"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>End Date <span class="text-danger">*</span></label>
+                                    <div class="cal-icon"><input name="end_date" class="form-control" type="date"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Description <span class="text-danger">*</span></label>
+                                    <textarea name="description" class="form-control" rows="4"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-form-label">Status</label>
+                                    <select name="status" class="form-control">
+                                        {% for status in status_choices %}
+                                            <option value="{{ status.0 }}">{{ status.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="submit-section">
+                            <button class="btn btn-primary submit-btn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Add Goal Modal -->
+
+
+{% endblock %}
+{% block script %}
+
+    <script>
+        $(document).ready(function(){
+            // Read value on page load
+            $("#result b").html($("#customRange").val());
+
+            // Read value on change
+            $("#customRange").change(function(){
+                $("#result b").html($(this).val());
+            });
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,390 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    Employee List
+{% endblock %}
+{% block stylesheet %}
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block sideber %}
+{% endblock %}
+{% block content %}
+
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Employee</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Employee</li>
+                    </ul>
+                </div>
+                <div class="col-auto float-right ml-auto">
+                    <a href="" class="btn add-btn" data-toggle="modal"
+                       data-target="#add_employee"><i class="fa fa-plus"></i> Add Employee</a>
+                    <div class="view-icons">
+                        <a href="" class="grid-view btn btn-link"><i class="fa fa-th"></i></a>
+                        <a href="" class="list-view btn btn-link active"><i class="fa fa-bars"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table datatable" id="employee_table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Employee ID</th>
+                            <th>Email</th>
+                            <th>Mobile</th>
+                            <th class="text-nowrap">Join Date</th>
+                            <th>Role</th>
+                            <th class="text-right no-sort">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in user %}
+                            <tr>
+                                <td>
+                                    <h2 class="table-avatar">
+                                        {% if user.profile_picture %}
+                                            <a href="{% url 'profile' id=user.id %}" class="avatar"><img alt="" src="{{ user.picture_url }}"></a>
+                                        {% else %}
+                                            <a href="{% url 'profile' id=user.id %}" class="avatar"><img alt="" src="{% static 'img/user.jpg' %}"></a>
+                                        {% endif %}
+                                        <a href="{% url 'profile' id=user.id %}">{{ user.user.username }} <span>Web Designer</span></a>
+                                    </h2>
+                                </td>
+                                <td>{{ user.employee_id }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>{{ user.date_of_join }}</td>
+                                <td>{{ user.designation }}</td>
+                                <td class="text-right">
+                                    <div class="dropdown dropdown-action">
+                                        <a href="employees-list.html#" class="action-icon dropdown-toggle"
+                                           data-toggle="dropdown" aria-expanded="false"><i
+                                                class="fas fa-ellipsis-v"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="employees-list.html#" data-toggle="modal"
+                                               data-target="#edit_employee"><i class="fa fa-edit m-r-5 text-info"></i>
+                                                Edit</a>
+                                            <a class="dropdown-item" href="employees-list.html#" data-toggle="modal"
+                                               data-target="#delete_employee"><i
+                                                    class="fa fa-trash text-danger m-r-5"></i> Delete</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+
+                            <div class="modal custom-modal fade" id="delete_employee" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="form-header">
+                                                <h3>Delete Employee</h3>
+                                                <p>Are you sure want to delete?</p>
+                                            </div>
+                                            <div class="modal-btn delete-action">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <a href="javascript:void(0);"
+                                                           class="btn btn-primary continue-btn">Delete</a>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <a href="javascript:void(0);" data-dismiss="modal"
+                                                           class="btn btn-primary cancel-btn">Cancel</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="edit_employee" class="modal custom-modal fade" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Employee</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{% url 'profile_update' user.id %}" method="post">
+                                                {% csrf_token %}
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">First Name <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control" value="{{ user.user.first_name }}" type="text" name="first_name" >
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">Last Name</label>
+                                                                <input class="form-control" value="{{ user.user.last_name }}" type="text" name="last_name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">Username <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control" value="{{ user.user.username }}" type="text" name="username">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">Email <span
+                                                                        class="text-danger">*</span></label>
+                                                                <input class="form-control" value="{{ user.email }}" name="email" type="email">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">Password</label>
+                                                                <input class="form-control" type="password" name="password">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">Confirm Password</label>
+                                                                <input class="form-control" type="password" name="confirm_password">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">Employee ID <span class="text-danger">*</span></label>
+                                                                <input type="text" value="{{ user.employee_id }}" name="employee_id" class="form-control floating">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">Joining Date <span
+                                                                        class="text-danger">*</span></label>
+                                                                <div class="">
+                                                                    <input class="form-control datetimepicker" name="date_of_join" placeholder="dd/mm/yyyy" vlue="{{ user.date_of_join }}">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="col-form-label">Phone </label>
+                                                                <input class="form-control" value="{{ user.phone }}" name="phone" type="number">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Department <span class="text-danger">*</span></label>
+                                                                <br>
+                                                                <select class="form-control" name="department">
+                                                                    <option selected>{{ user.department }}</option>
+                                                                    {% for d in department %}
+                                                                        <option value="{{ d.department_name }}">{{ d.department_name }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Designation <span class="text-danger">*</span></label>
+                                                                <select class="form-control" name="designation">
+                                                                    <option selected>{{ user.designation }}</option>
+                                                                    {% for dg in designation %}
+                                                                        <option value="{{ dg.designation_type }}">{{ dg.designation_type }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="submit-section">
+                                                        <button class="btn btn-primary submit-btn" type="submit">Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="add_employee" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Employee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'register_profile' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <h3>User information</h3>
+                        <hr class="my-4"/>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-first-name">First Name&nbsp;<span
+                                                style="color:red;">*</span></label>
+                                        <input type="text" name="fname" id="input-first-name"
+                                               pattern="[A-Za-z\d\,]{2,100}"
+                                               title="First Name must be between 3 and 40 characters in length and contains only letters"
+                                               placeholder="First Name" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-last-name">Last Name&nbsp;<span
+                                                style="color:red;">*</span></label>
+                                        <input type="text" name="lname" id="input-last-name"
+                                               pattern="[A-Za-z\d\,]{2,100}"
+                                               title="Last Name must be between 3 and 40 characters in length and contains only letters"
+                                               placeholder="Last Name" class="form-control" required>
+                                    </div>
+                                </div>
+                                .
+                            </div>
+                        </div>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">UserName&nbsp;<span
+                                                style="color:red;">*</span></label>
+                                        <input type="text" name="uname" id="input-username" class="form-control"
+                                               placeholder="Username" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-username">Email&nbsp;<span
+                                                style="color:red;">*</span></label>
+                                        <input type="email" name="email" class="form-control" placeholder="Email"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-designation">Employee ID&nbsp;<span
+                                                style="color:red;">*</span></label>
+                                        <input type="text" name="employee_id" pattern="[A-Za-z\d\,]{3,100}"
+                                               title="Designation must be between 3 and 40 characters in length and containing format string+string|number"
+                                               id="input-designation" class="form-control" placeholder="Designation"
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-phone">Phone&nbsp;<span
+                                                style="color:red;">*</span></label>
+                                        <input type="text" name="phone" id="input-phone" pattern="[0-9]{11}"
+                                               title="Phone number must be between 11 characters in length and contains only number"
+                                               class="form-control" placeholder="Contact Number" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="input-password">Joining Date&nbsp;<span
+                                                style="color:#ff0000;">*</span></label>
+                                        <input type="date" name="joining_date" id="input-password" class="form-control"
+                                               placeholder="Enter A Password" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Profile Picture&nbsp;<span
+                                                style="color:#ff0000;">*</span></label>
+                                        <input type="file" name="profile_picture" class="form-control" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Department <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="department">
+                                            {% for d in department %}
+                                                <option value="{{ d.department_name }}">{{ d.department_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Designation <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="designation" required>
+                                            {% for dg in designation %}
+                                                <option value="{{ dg.designation_type }}">{{ dg.designation_type }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label">Password</label>
+                                        <input class="form-control" type="password" name="password" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <button class="btn btn-primary float-right" type="submit" style="">Create Data Collector
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('#employee_table').DataTable(
+                {
+                "ordering": false
+                }
+            );
+        });
+    </script>
+{% endblock %}
+
+

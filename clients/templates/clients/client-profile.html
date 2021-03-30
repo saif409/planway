@@ -1,0 +1,179 @@
+
+{%  extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+{% endblock %}
+{% block stylesheet %}
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block sideber %}
+{% endblock %}
+{% block content %}
+
+        <div class="content container-fluid">
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Profile</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Profile</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+					<div class="card mb-0">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="profile-view">
+										<div class="profile-img-wrap">
+											<div class="profile-img">
+												<a href="client-profile.html">
+													<img src="{{ client.profile_picture.url }}" alt="">
+												</a>
+											</div>
+										</div>
+										<div class="profile-basic">
+											<div class="row">
+												<div class="col-md-5">
+													<div class="profile-info-left">
+														<h3 class="user-name m-t-0">{{ client.company_name }}</h3>
+														<h5 class="company-role m-t-0 mb-0">{{ client.company_name }}</h5>
+														<small class="text-muted">{{ client.designation }}</small>
+														<div class="staff-id">Employee ID : {{ client.clients_id }}</div>
+													</div>
+												</div>
+												<div class="col-md-7">
+													<ul class="personal-info">
+														<li>
+															<span class="title">Phone:</span>
+															<span class="text"><a href="client-profile.html">{{ client.phone }}</a></span>
+														</li>
+														<li>
+															<span class="title">Email:</span>
+															<span class="text"><a href="client-profile.html">{{ client.email }}</a></span>
+														</li>
+                                                        <li>
+															<span class="title">Birthday:</span>
+															<span class="text">{{ client.date_of_birth }}</span>
+														</li>
+														<li>
+															<span class="title">Address:</span>
+															<span class="text">{{ client.address }}</span>
+														</li>
+														<li>
+															<span class="title">Gender:</span>
+															<span class="text">{{ client.gender }}</span>
+														</li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card tab-box">
+						<div class="row user-tabs">
+							<div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
+								<ul class="nav nav-tabs nav-tabs-bottom">
+									<li class="nav-item col-sm-3"><a class="nav-link active" data-toggle="tab" href="client-profile.html#myprojects">Projects</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+							<div class="tab-content profile-tab-content">
+
+								<!-- Projects Tab -->
+								<div id="myprojects" class="tab-pane fade show active">
+									<div class="row">
+										{% for c in client_project %}
+                                            <div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
+											<div class="card">
+												<div class="card-body">
+													<div class="dropdown profile-action">
+														<a href="client-profile.html#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+														<div class="dropdown-menu dropdown-menu-right">
+															<a class="dropdown-item" href="client-profile.html#" data-toggle="modal" data-target="#edit_project"><i class="fa fa-edit text-primary m-r-5"></i> Edit</a>
+															<a class="dropdown-item" href="{% url 'client_project_remove' id=c.id %}" data-toggle="modal{{ c.id }}" data-target="#delete_project{{ c.id }}"><i class="fa fa-trash text-danger m-r-5"></i> Delete</a>
+														</div>
+													</div>
+
+													<h4 class="project-title"><a href="../../../projects/templates/project/project-view.html">{{ c.project_title }}</a></h4>
+													<p class="text-muted">{{ c.project_description | truncatechars:150 }}
+													<div class="pro-deadline m-b-15">
+														<div class="sub-title">
+															Deadline:
+														</div>
+														<div class="text-muted">
+															 {{ c.project_deadline }}
+														</div>
+													</div>
+													<div class="project-members m-b-15">
+														<div>Project Leader :</div>
+														<ul class="team-members">
+															<li>
+																<a href="" data-toggle="tooltip" title=""><img alt="" src="{{ c.project_leader.leader_name.profile_picture.url }}"></a>
+															</li>
+														</ul>
+													</div>
+													<div class="project-members m-b-15">
+														<div>Team :</div>
+														<ul class="team-members">
+															{% for pe in c.project_employee.all %}
+                                                            <li>
+																<a href="{% url 'profile' id=pe.id %}" data-toggle="tooltip" title="{{ pe.user.username }}"><img alt="" src="{{ pe.profile_picture.url }}"></a></a>
+															</li>
+                                                            {% endfor %}
+														</ul>
+													</div>
+													<p class="m-b-5">Progress <span class="text-success float-right">{{ c.progress }}%</span></p>
+													<div class="progress progress-xs mb-0">
+														<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="{{ c.progress }}%" style="width: {{ c.progress }}%"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+                                            <div class="modal custom-modal fade" id="delete_project{{ c.id }}" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body">
+                                                            <div class="form-header">
+                                                                <h3>Delete Employee</h3>
+                                                                <p>Are you sure want to delete?</p>
+                                                            </div>
+                                                            <div class="modal-btn delete-action">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+                                                                    </div>
+                                                                    <div class="col-6">
+                                                                        <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+{% endblock %}
+{% block script %}
+{% endblock %}

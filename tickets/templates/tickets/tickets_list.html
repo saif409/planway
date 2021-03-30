@@ -1,0 +1,691 @@
+{%  extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    HR | Ticket List
+{% endblock %}
+{% block stylesheet %}
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block sideber %}
+{% endblock %}
+{% block content %}
+
+        <div class="content container-fluid">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title">Tickets</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Tickets</li>
+                        </ul>
+                    </div>
+                    <div class="col-auto float-right ml-auto">
+                        <a href="tickets.html#" class="btn add-btn" data-toggle="modal" data-target="#add_ticket"><i class="fa fa-plus"></i> Add Ticket</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Page Header -->
+            <div class="col-md-12 mt-2 mb-4">
+                <div class="row align-items-center">
+                    <div class="col-12">
+                        <div class="col-lg-offset-6">
+                            <a class=" btn btn-success btn-sm float-right" href="{% url 'ticket_list' filter='Low' %}">Low Priority Tickets</a>
+                            <a class="mr-2 btn btn-success btn-sm float-right"href="{% url 'ticket_list' filter='Medium' %}">Medium Priority Tickets</a>
+                            <a class="mr-2 btn btn-success btn-sm float-right" href="{% url 'ticket_list' filter='High' %}">High Priority Tickets</a>
+                            <a class="mr-2 btn btn-success btn-sm float-right" href="{% url 'ticket_list' filter='None' %}">All Tickets</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-group m-b-30">
+                        {% if count_ticket > 0 %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">Total Tickets</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">100%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">{{ count_ticket }}</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%;"
+                                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">Total Tickets</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">0%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">0</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;"
+                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="0"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if count_ticket > 0 %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">New Tickets</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">+{{ new_ticket_cal |floatformat:2 }}%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">{{ new_ticket }}</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             style="width: {{ new_ticket_cal }}%;" aria-valuenow="{{ new_ticket_cal }}"
+                                             aria-valuemin="0" aria-valuemax="{{ new_ticket_cal }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">New Tickets</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">+0%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">0</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 0;"
+                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="0"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if count_ticket > 0 %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">Solved Tickets</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">+{{ solved_ticket_cal |floatformat:2 }}%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">{{ solved_ticket }}</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             style="width: {{ solved_ticket_cal }}%;"
+                                             aria-valuenow="{{ solved_ticket_cal }}"
+                                             aria-valuemin="{{ solved_ticket_cal }}"
+                                             aria-valuemax="{{ solved_ticket_cal }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">Solved Tickets</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">0%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">0</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;"
+                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="0"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if count_ticket > 0 %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">Pending Tickets</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-danger">-{{ pending_ticket_cal |floatformat:2 }}%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">{{ pending_ticket }}</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             style="width: {{ pending_ticket_cal }}%;"
+                                             aria-valuenow="{{ pending_ticket_cal }}"
+                                             aria-valuemin="{{ pending_ticket_cal }}"
+                                             aria-valuemax="{{ pending_ticket_cal }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">Pending Tickets</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">0%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">0</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;"
+                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="0"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-group m-b-30">
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">On Hold</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">+{{ on_Hold_ticket_cal |floatformat:2 }}%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">{{ new_ticket }}</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             style="width: {{ on_Hold_ticket_cal }}%;" aria-valuenow="{{ on_Hold_ticket_cal }}"
+                                             aria-valuemin="0" aria-valuemax="{{ on_Hold_ticket_cal }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">InProgress</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">+{{ inprogress_ticket_cal |floatformat:2 }}%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">{{ inprogress_ticket }}</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             style="width: {{ inprogress_ticket_cal }}%;" aria-valuenow="{{ inprogress_ticket_cal }}"
+                                             aria-valuemin="0" aria-valuemax="{{ inprogress_ticket_cal }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">Cancelled</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">+{{ canceled_ticket_cal |floatformat:2 }}%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">{{ canceled_ticket }}</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             style="width: {{ canceled_ticket_cal }}%;"
+                                             aria-valuenow="{{ canceled_ticket_cal }}"
+                                             aria-valuemin="{{ canceled_ticket_cal }}"
+                                             aria-valuemax="{{ canceled_ticket_cal }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <span class="d-block">Reopen</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-success">-{{ reopened_ticket_cal |floatformat:2 }}%</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="mb-3">{{ reopened_ticket}}</h3>
+                                    <div class="progress mb-2" style="height: 5px;">
+                                        <div class="progress-bar bg-primary" role="progressbar"
+                                             style="width: {{ reopened_ticket_cal }}%;" aria-valuenow="{{ reopened_ticket_cal }}" aria-valuemin="{{ reopened_ticket_cal }}" aria-valuemax="{{ reopened_ticket_cal }}"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+            <form method="GET">
+                <div class="row filter-row">
+                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                        <div class="form-group form-focus">
+                            <input type="text" class="form-control floating" name="ticket_subjects" value="{{ request.GET.ticket_subjects }}">
+                            <label class="focus-label">ticket_subjects</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                        <div class="form-group form-focus select-focus focused" data-select2-id="26">
+                            <select class="floating form-control" data-select2-id="1" tabindex="-1" aria-hidden="true" name="status">
+                                <option value=""> -- Select -- </option>
+                                <option  value="1" {% if request.GET.status == '1' %} selected{% endif %}> Open </option>
+                                <option  value="2" {% if request.GET.status == '2' %} selected{% endif %}> Reopened </option>
+                                <option  value="3" {% if request.GET.status == '3' %} selected{% endif %}> On Hold </option>
+                                <option  value="4" {% if request.GET.status == '4' %} selected{% endif %}> Pending </option>
+                                <option  value="5" {% if request.GET.status == '5' %} selected{% endif %}> InProgress </option>
+                                <option  value="6" {% if request.GET.status == '6' %} selected{% endif %}> Canceled </option>
+                                <option  value="7" {% if request.GET.status == '7' %} selected{% endif %}> Solved </option>
+                                <option  value="8" {% if request.GET.status == '8' %} selected{% endif %}> New </option>
+
+                            </select>
+                            <label class="focus-label">Status</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                        <div class="form-group form-focus select-focus focused">
+                            <select class=" floating select2-hidden-accessible form-control" data-select2-id="4" tabindex="-1" aria-hidden="true" name="priority">
+                                <option value="" > -- Select -- </option>
+                                <option value="1" {% if request.GET.priority == '1' %} selected{% endif %}> High </option>
+                                <option value="2" {% if request.GET.priority == '2' %} selected{% endif %}> Medium </option>
+                                <option value="3" {% if request.GET.priority == '3' %} selected{% endif %}> Low </option>
+                            </select>
+                            <label class="focus-label">Priority</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                        <div class="form-group form-focus focused">
+                            <div class="">
+                                <input class="form-control floating datetimepicker" type="date" name="from" value="{{ request.GET.from }}" >
+                            </div>
+                            <label class="focus-label">From</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                        <div class="form-group form-focus focused">
+                            <div class="">
+                                <input class="form-control floating datetimepicker" type="date" name="to" value="{{ request.GET.to }}">
+                            </div>
+                            <label class="focus-label">To</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                        <button class="btn btn-success btn-block" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+
+
+
+
+
+
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped custom-table mb-0" id="ticket_table">
+                            <thead >
+                                <tr>
+                                    <th>Ticket Id</th>
+                                    <th>Ticket Subject</th>
+                                    <th>Assigned Staff</th>
+                                    <th>Priority</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ticket in ticket %}
+
+                                    <tr>
+                                    <td><a href="ticket-view.html">#TKT-0{{ ticket.id }}</a></td>
+                                    <td>{{ ticket.ticket_subjects }}<br><small>{{ ticket.created_date }} </small></td>
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            <a class="avatar avatar-xs" href=""><img alt="" src="assets/img/profiles/avatar-10.jpg"></a>
+                                            <a href="tickets.html#">{{ ticket.assign_staff }}</a>
+                                        </h2>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown action-label">
+                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="tickets.html#" data-toggle="dropdown" aria-expanded="false">
+                                                {% if ticket.priority == 1%}
+                                                    <i class="fa fa-dot-circle text-primary"></i> {{ ticket.get_priority_display }}
+                                                {% elif ticket.priority == 2 %}
+                                                     <i class="fa fa-dot-circle text-info"></i> {{ ticket.get_priority_display }}
+                                                {% elif ticket.priority == 3 %}
+                                                    <i class="fa fa-dot-circle text-danger"></i> {{ ticket.get_priority_display }}
+                                                {% endif %}
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right" data-tkid="{{ ticket.id }}">
+                                                <a data-value="1" class="dropdown-item prio" ><i class="fa fa-dot-circle text-primary"></i> High</a>
+                                                <a data-value="2" class="dropdown-item prio"><i class="fa fa-dot-circle text-info"></i> Medium</a>
+                                                <a data-value="3" class="dropdown-item prio" ><i class="fa fa-dot-circle text-danger"></i> Low</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown action-label">
+                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="tickets.html#" data-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa fa-dot-circle text-success"></i> {{ ticket.get_status_display }}
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right" data-tkid="{{ ticket.id }}">
+                                                <a data-value="1" class="dropdown-item stat" ><i class="fa fa-dot-circle text-info"></i>Open</a>
+                                                <a data-value="2" class="dropdown-item stat"><i class="fa fa-dot-circle text-info"></i> Reopened</a>
+                                                <a data-value="3" class="dropdown-item stat" ><i class="fa fa-dot-circle text-danger"></i> On Hold</a>
+                                                <a data-value="4" class="dropdown-item stat"><i class="fa fa-dot-circle text-success"></i> Pending</a>
+                                                <a data-value="5" class="dropdown-item stat" ><i class="fa fa-dot-circle text-success"></i> InProgress</a>
+                                                <a data-value="6" class="dropdown-item stat" ><i class="fa fa-dot-circle text-danger"></i> Cancelled</a>
+                                                <a data-value="7" class="dropdown-item stat" ><i class="fa fa-dot-circle text-danger"></i> Solved</a>
+                                                <a data-value="8" class="dropdown-item stat" ><i class="fa fa-dot-circle text-danger"></i> New</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="dropdown dropdown-action">
+                                            <a href="tickets.html#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" href="tickets.html#" data-toggle="modal" id="{{ticket.id}}" data-target="#edit_ticket{{ticket.id}}"><i class="fa fa-edit text-primary m-r-5"></i> Edit</a>
+                                                <a class="dropdown-item" href="tickets.html#" data-toggle="modal" id="{{ ticket.id }}" data-target="#delete_ticket{{ ticket.id }}"><i class="fa fa-trash text-danger m-r-5"></i> Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                    <div id="add_ticket" class="modal custom-modal fade" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Add Ticket</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="POST" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Ticket Subject</label>
+                                                                    <input class="form-control" type="text" name="ticket_subjects" att>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Client</label>
+                                                                    <select class="select form-control" name="clients" required>
+                                                                        {% for client in client %}
+                                                                            <option value="{{ client.company_name }}">{{ client.company_name }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Priority</label>
+                                                                    <select class="select form-control" name="priority">
+                                                                        <option value="1">High</option>
+                                                                        <option value="2">Medium</option>
+                                                                        <option value="3">Low</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Status</label>
+                                                                    <select name="status" class="form-control">
+                                                                        <option value="1">Open</option>
+                                                                        <option value="2">Reopened</option>
+                                                                        <option value="3">OnHold</option>
+                                                                        <option value="4">Pending</option>
+                                                                        <option value="5">InProgress</option>
+                                                                        <option value="6">Cancelled</option>
+                                                                        <option value="7">Solved</option>
+                                                                        <option value="8">New</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label>Description</label>
+                                                                    <textarea class="form-control" name="description"></textarea>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Upload Files</label>
+                                                                    <input class="form-control" type="file" name="file_upload">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="submit-section">
+                                                            <button class="btn btn-primary submit-btn">Submit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="edit_ticket{{ ticket.id }}" class="modal custom-modal fade" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Update Ticket</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="POST" action="{% url 'ticket_update' id=ticket.id %}" enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Ticket Subject</label>
+                                                                    <input class="form-control" type="text" name="ticket_subjects" value="{{ ticket.ticket_subjects }}" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Client</label>
+                                                                    <br><small>Current : <span class="text-info">{{ ticket.clients.company_name }}</span></small>
+                                                                    <select class="select form-control" name="clients" required>
+                                                                        {% for client in client %}
+                                                                            <option value="{{ client.company_name }}">{{ client.company_name }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Priority</label>
+                                                                   <br><small>Current : <span class="text-info">{{ ticket.get_priority_display }}</span></small>
+                                                                    <select class="select form-control" name="priority">
+                                                                        <option value="1">High</option>
+                                                                        <option value="2">Medium</option>
+                                                                        <option value="3">Low</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>Status</label>
+                                                                     <br><small>Current : <span class="text-info">{{ ticket.get_status_display }}</span></small>
+                                                                    <select name="status" id="" class="form-control">
+                                                                        <option value="1">Open</option>
+                                                                        <option value="2">Reopened</option>
+                                                                        <option value="3">OnHold</option>
+                                                                        <option value="4">Pending</option>
+                                                                        <option value="5">InProgress</option>
+                                                                        <option value="6">Cancelled</option>
+                                                                        <option value="7">Solved</option>
+                                                                        <option value="8">New</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label>Description</label>
+                                                                    <textarea class="form-control" name="description">{{ ticket.description }}</textarea>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Upload Files</label>
+                                                                    <input class="form-control" type="file" name="file_upload">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="submit-section">
+                                                            <button class="btn btn-primary submit-btn">Submit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal custom-modal fade" id="delete_ticket{{ ticket.id }}" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <div class="form-header">
+                                                        <h3>Delete Ticket</h3>
+                                                        <p>Are you sure want to delete?</p>
+                                                    </div>
+                                                    <div class="modal-btn delete-action">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <a href="{% url 'ticket_remove' id=ticket.id %}" class="btn btn-primary continue-btn">Delete</a>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready( function () {
+        $('#ticket_table').DataTable(
+            {
+                "ordering": false
+            }
+        );
+    } );
+    </script>
+    <script>
+       $(".stat").click(function (){
+           let status = $(this).data('value')
+           let tkid = $(this).parent().data('tkid')
+
+           let data = {
+                   status: status, tkid: tkid
+               }
+
+           $.ajax({
+               url: '{% url 'change-status' %}',
+               data: data,
+               method: 'get',
+               success: function (){
+                    location.reload()
+               },
+               error: function (){
+
+               }
+
+
+           })
+
+       })
+    </script>
+
+    <script>
+       $(".prio").click(function (){
+           let priority = $(this).data('value')
+           let tkid = $(this).parent().data('tkid')
+           let data = {
+                   priority:priority,
+                   tkid:tkid
+               }
+           $.ajax({
+               url: '{% url 'change-priority' %}',
+               data:data,
+               method: 'get',
+               success:function (){
+                   location.reload()
+               },
+               error:function (error){
+                   console.log(error)
+
+               }
+           })
+
+       })
+    </script>
+{% endblock %}

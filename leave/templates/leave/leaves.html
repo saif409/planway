@@ -1,0 +1,421 @@
+{%  extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+Oxdora I tech | Employee Leave
+{% endblock %}
+{% block stylesheet %}
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block sideber %}
+{% endblock %}
+{% block content %}
+<div class="content container-fluid">
+
+    <div class="container-fluid">
+
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Leaves</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Leaves</li>
+                    </ul>
+                </div>
+                <div class="col-auto float-right ml-auto">
+                    <a href="leaves.html#" class="btn add-btn" data-toggle="modal" data-target="#add_leave"><i
+                            class="fa fa-plus"></i> Add Leave</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mt-2 mb-4">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="col-lg-offset-6">
+                        <a class="mr-2 btn btn-success btn-sm float-right" href="{% url 'leave_list' filter='Rejected' %}">Declined Data Collector</a>
+                        <a class="mr-2 btn btn-success btn-sm float-right" href="{% url 'leave_list' filter='Approve' %}">Approved Data Collector</a>
+                        <a class="mr-2 btn btn-success btn-sm float-right" href="{% url 'leave_list' filter='Pending' %}">Pending Leave Request</a>
+                        <a class="mr-2 btn btn-success btn-sm float-right" href="{% url 'leave_list' filter='New' %}">New Leave Request</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stats-info">
+                    <h6>Today Presents</h6>
+                    <h4>12 / 60</h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-info">
+                    <h6>Planned Leaves</h6>
+                    <h4>8 <span>Today</span></h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-info">
+                    <h6>Unplanned Leaves</h6>
+                    <h4>0 <span>Today</span></h4>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-info">
+                    <h6>Pending Requests</h6>
+                    <h4>{{ pending_leave.count }}</h4>
+                </div>
+            </div>
+        </div>
+
+        <form method="GET">
+            <div class="row filter-row">
+            <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                <div class="form-group form-focus">
+                    <input type="text" class="form-control floating" name="employee_name" value="{{ request.GET.employee_name }}">
+                    <label class="focus-label">Employee Name</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                <div class="form-group form-focus select-focus">
+                    <select class=" floating form-control" name="leave_type">
+                        <option> -- Select --</option>
+                        <option value="Casual Leave">Casual Leave</option>
+                        <option value="Medical Leave">Medical Leave</option>
+                        <option value="Loss of Pay"></option>
+                    </select>
+                    <label class="focus-label">Leave Type</label>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                 <div class="form-group form-focus select-focus focused">
+                    <select class=" floating select2-hidden-accessible form-control" data-select2-id="4" tabindex="-1" aria-hidden="true" name="status">
+                        <option value="1" {% if request.GET.status == '1' %} selected{% endif %}> New</option>
+                        <option value="2" {% if request.GET.status == '2' %} selected{% endif %}> Pending</option>
+                        <option value="3" {% if request.GET.status == '3' %} selected{% endif %}> Approve</option>
+                        <option value="4" {% if request.GET.status == '4' %} selected{% endif %}> Rejected</option>
+                    </select>
+                    <label class="focus-label">Status</label>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                <div class="form-group form-focus">
+                    <div class="">
+                        <input class="form-control floating datetimepicker" type="date" name="leave_from" value="{{ request.GET.leave_from }}" >
+                    </div>
+                    <label class="focus-label" >From</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                <div class="form-group form-focus">
+                    <div class="">
+                        <input class="form-control floating datetimepicker" type="date" name="leave_to" value="{{ request.GET.leave_to }}">
+                    </div>
+                    <label class="focus-label">To</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+                <button class="btn btn-success btn-block" type="submit">Search</button>
+            </div>
+        </div>
+        </form>
+
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table mb-0 datatable" id="leave_table">
+                        <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Leave Type</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>No of Days</th>
+                            <th>Reason</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for obj in obj %}
+                        <tr>
+                            <td>
+                                <h2 class="table-avatar">
+                                    <a href="{% url 'employee_leave_list' id=obj.employee_name.id %}" class="avatar"><img alt="" src="{{ obj.employee_name.username }}"></a>
+                                    <a href="{% url 'employee_leave_list' id=obj.employee_name.id %}">{{ obj.employee_name.user.username }}<span>Web Developer</span></a>
+                                </h2>
+                            </td>
+                            <td>{{ obj.leave_type }}</td>
+                            <td>{{ obj.leave_from }}</td>
+                            <td>{{ obj.leave_to }}</td>
+                            <td>{{ obj.no_of_date }} days</td>
+                            <td>{{ obj.leave_Reason}}</td>
+                            <td class="text-center">
+                                <div class="dropdown action-label">
+                                    <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="tickets.html#" data-toggle="dropdown" aria-expanded="false">
+
+                                        {% if obj.status == 1%}
+                                            <i class="fa fa-dot-circle text-success"></i> {{ obj.get_status_display }}
+                                        {% elif obj.status == 2 %}
+                                            <i class="fa fa-dot-circle text-primary"></i> {{ obj.get_status_display }}
+                                        {% elif obj.status == 3 %}
+                                            <i class="fa fa-dot-circle text-info"></i> {{ obj.get_status_display }}
+                                        {% elif obj.status == 4 %}
+                                            <i class="fa fa-dot-circle text-danger"></i> {{ obj.get_status_display }}
+                                        {% endif %}
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" data-leaveid="{{ obj.id }}" style="cursor: pointer;">
+                                        <a data-value="1" class="dropdown-item stat" ><i class="fa fa-dot-circle text-info"></i>New</a>
+                                        <a data-value="2" class="dropdown-item stat"><i class="fa fa-dot-circle text-primary"></i> Pending</a>
+                                        <a data-value="3" class="dropdown-item stat" ><i class="fa fa-dot-circle text-success"></i> Approved</a>
+                                        <a data-value="4" class="dropdown-item stat"><i class="fa fa-dot-circle text-danger"></i> Rejected</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <div class="dropdown dropdown-action">
+                                    <a href="leaves.html#" class="action-icon dropdown-toggle" data-toggle="dropdown"
+                                       aria-expanded="false"><i class="fas fa-ellipsis-v"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="leaves.html#" data-toggle="modal"
+                                           data-target="#edit_leave"><i class="fa fa-edit text-primary m-r-5"></i> Edit</a>
+                                        <a class="dropdown-item" href="leaves.html#" data-toggle="modal"
+                                           data-target="#delete_approve"><i class="fa fa-trash text-danger m-r-5"></i> Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                            <div class="modal custom-modal fade" id="delete_approve" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="form-header">
+                                                <h3>Delete Leave</h3>
+                                                <p>Are you sure want to delete this leave?</p>
+                                            </div>
+                                            <div class="modal-btn delete-action">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <a href="{% url 'remove_leave' id=obj.id %}" class="btn btn-primary continue-btn">Delete</a>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="add_leave" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Leave</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'add_leave' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Employee Name<span class="text-danger">*</span></label>
+                            <select id="select_employee" class="form-control" name="employee_name">
+                                {% for obj in user_obj %}
+                                    <option value="{{ obj.id }}">{{ obj.user.username }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Leave Type <span class="text-danger">*</span></label>
+                            <select class="form-control" name="leave_type">
+                                <option>Select Leave Type</option>
+                                <option value="Casual Leave Days">Casual Leave Days</option>
+                                <option value="Medical Leave">Medical Leave</option>
+                                <option value="Loss of Pay">Loss of Pay</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>From <span class="text-danger">*</span></label>
+                            <div class="date">
+                                <input class="form-control" type="date" name="leave_from">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>To <span class="text-danger">*</span></label>
+                            <div class="date">
+                                <input class="form-control datetimepicker" type="date" name="leave_to">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of days <span class="text-danger">*</span></label>
+                            <input class="form-control" readonly type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Remaining Leaves <span class="text-danger">*</span></label>
+                            <input class="form-control" readonly value="12" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Leave Reason <span class="text-danger">*</span></label>
+                            <textarea rows="4" class="form-control" name="leave_Reason"></textarea>
+
+                        </div>
+                        <div class="submit-section">
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="edit_leave" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Leave</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form>
+                        <div class="form-group">
+                            <label>Leave Type <span class="text-danger">*</span></label>
+                            <select class="select form-control" name="leave_type">
+                                <option>Select Leave Type</option>
+                                <option>Casual Leave 12 Days</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>From <span class="text-danger">*</span></label>
+                            <div class="cal-icon">
+                                <input class="form-control datetimepicker" value="01-01-2019" type="text" name="leave_from">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>To <span class="text-danger">*</span></label>
+                            <div class="cal-icon">
+                                <input class="form-control datetimepicker" value="01-01-2019" type="text" name="leave_to">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Remaining Leaves <span class="text-danger">*</span></label>
+                            <input class="form-control" readonly value="12" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Leave Reason <span class="text-danger">*</span></label>
+                            <textarea rows="4" class="form-control" name="leave_Reason">Going to hospital</textarea>
+                        </div>
+                        <div class="submit-section">
+                            <button class="btn btn-primary submit-btn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal custom-modal fade" id="approve_leave" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-header">
+                        <h3>Leave Approve</h3>
+                        <p>Are you sure want to approve for this leave?</p>
+                    </div>
+                    <div class="modal-btn delete-action">
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="javascript:void(0);" class="btn btn-primary continue-btn">Approve</a>
+                            </div>
+                            <div class="col-6">
+                                <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Decline</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    {% endblock %}
+    {% block script %}
+        <script>
+          $(document).ready( function () {
+            $('#leave_table').DataTable(
+                {
+                    "ordering": false
+                }
+            );
+            $("#select_employee").on('change', function(){
+                alert("Changed. ");
+            })
+          });
+
+
+        </script>
+
+        <script>
+           $(".stat").click(function (){
+               let status = $(this).data('value')
+               let leaveid = $(this).parent().data('leaveid')
+
+               let data = {
+                       status: status,
+                        leaveid: leaveid
+                   }
+               $.ajax({
+                   url: '{% url 'change_leave_status' %}',
+                   data: data,
+                   method: 'get',
+                   success: function (){
+                        location.reload()
+                   },
+                   error: function (){
+                   }
+               })
+           })
+        </script>
+
+        <script>
+       $(".prio").click(function (){
+           let priority = $(this).data('value')
+           let tkid = $(this).parent().data('tkid')
+           let data = {
+                   priority:priority,
+                   tkid:tkid
+               }
+           $.ajax({
+               url: '{% url 'change-priority' %}',
+               data:data,
+               method: 'get',
+               success:function (){
+                   location.reload()
+               },
+               error:function (error){
+                   console.log(error)
+
+               }
+           })
+
+       })
+    </script>
+
+    {% endblock %}

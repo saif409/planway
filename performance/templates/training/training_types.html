@@ -1,0 +1,203 @@
+{%  extends 'base/base.html' %}
+{% load static %}
+{% block title %}
+    Oxdora I Tech | Goal List
+{% endblock %}
+{% block stylesheet %}
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block sideber %}
+{% endblock %}
+{% block content %}
+
+    <!-- Page Content -->
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Training Type</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Training Type</li>
+                    </ul>
+                </div>
+                <div class="col-auto float-right ml-auto">
+                    <a class="btn add-btn" data-toggle="modal" data-target="#add_type"><i class="fa fa-plus"></i> Add Type</a>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table mb-0 datatable">
+                        <thead>
+                        <tr>
+                            <th style="width: 30px;">#</th>
+                            <th>Type </th>
+                            <th>Description </th>
+                            <th>Status </th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for training_type in training_types %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ training_type.training_type }}</td>
+                            <td>{{ training_type.description }}</td>
+                            <td>
+                                <div class="dropdown action-label">
+                                    <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+
+                                        {% ifequal training_type.status 1 %}
+                                            <i class="fa fa-dot-circle-o text-success"></i> {{ training_type.get_status_display }}
+                                        {% else %}
+                                            <i class="fa fa-dot-circle-o text-danger"></i> {{ training_type.get_status_display }}
+                                        {% endifequal %}
+
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item"><i class="fa fa-dot-circle-o text-success"></i> Active</a>
+                                        <a class="dropdown-item"><i class="fa fa-dot-circle-o text-danger"></i> Inactive</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-right">
+                                <div class="dropdown dropdown-action">
+                                    <a href="training-type.html#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v">more_vert</i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" data-toggle="modal" data-target="#edit_type{{ training_type.id }}"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                                        <a class="dropdown-item" data-toggle="modal" data-target="#delete_type{{ training_type.id }}"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                    </div>
+
+                                    <!-- Edit Training Type Modal -->
+                                    <div id="edit_type{{ training_type.id }}" class="modal custom-modal fade" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Edit Type</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{% url 'performance:update_training_type' training_type.id %}" method="post"> {% csrf_token %}
+                                                        <div class="form-group">
+                                                            <label>Type <span class="text-danger">*</span></label>
+                                                            <input class="form-control" name="type" type="text" value="{{ training_type.training_type }}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Description <span class="text-danger">*</span></label>
+                                                            <textarea class="form-control" name="description" rows="4">{{ training_type.description }}</textarea>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-form-label">Status</label>
+                                                            <select class="form-control" name="status">
+                                                                {% for status in status_choices %}
+                                                                    <option value="{{ status.0 }}"
+                                                                    {% ifequal status.0 training_type.status %}
+                                                                        selected
+                                                                    {% endifequal %}
+                                                                    >{{ status.1 }}</option>
+                                                                {% endfor %}
+
+                                                            </select>
+                                                        </div>
+                                                        <div class="submit-section">
+                                                            <button class="btn btn-primary submit-btn">Save</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /Edit Training Type Modal -->
+
+                                    <!-- Delete Training Type Modal -->
+                                    <div class="modal custom-modal fade" id="delete_type{{ training_type.id }}" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <div class="form-header">
+                                                        <h3>Delete Training Type</h3>
+                                                        <p>Are you sure want to delete?</p>
+                                                    </div>
+                                                    <div class="modal-btn delete-action">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <a href="{% url 'performance:remove_training_type' training_type.id %}" class="btn btn-primary continue-btn">Delete</a>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /Delete Training Type Modal -->
+
+                                </div>
+                            </td>
+                        </tr>
+                       {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Content -->
+
+    <!-- Add Training Type Modal -->
+    <div id="add_type" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'performance:add_training_type' %}" method="post"> {% csrf_token %}
+                        <div class="form-group">
+                            <label>Type <span class="text-danger">*</span></label>
+                            <input name="type" class="form-control" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Description <span class="text-danger">*</span></label>
+                            <textarea name="description" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label">Status</label>
+                            <select class="form-control" name="status">
+                               {% for status in status_choices %}
+                                   <option value="{{ status.0 }}">{{ status.1 }}</option>
+                               {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="submit-section">
+                            <button class="btn btn-primary submit-btn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Add Training Type Modal -->
+
+
+
+{% endblock %}
+{% block script %}
+
+
+{% endblock %}
